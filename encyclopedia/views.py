@@ -2,8 +2,6 @@ from django.shortcuts import render
 from django import forms
 from . import util
 
-class SearchForm(forms.Form):
-    search_entry = forms.CharField(label='Search Encyclopedia')
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -22,16 +20,17 @@ def full_entry(request, entry):
         })
         
 def search_entry(request):
-    search_entry = request.GET.get("q")
-    if util.get_entry(search_entry):
+    fun = request.GET.get("q")
+    if util.get_entry(fun):
         return render(request, "encyclopedia/full_entry.html", {
-            "entry": util.get_entry(search_entry),
-            "entry_name": search_entry
+            "entry": util.get_entry(fun),
+            "entry_name": fun
         })
     else:
         return render(request, "encyclopedia/apology.html", {
-            "entry_name": search_entry
+            "entry_name": fun
         })
+
     
     
 
