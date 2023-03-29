@@ -21,9 +21,18 @@ def full_entry(request, entry):
             "entry_name": entry
         })
         
-def search_result(request):
-    if util.get_entry(request):
-        return render()
+def search_entry(request):
+    search_entry = request.GET.get("q")
+    if util.get_entry(search_entry):
+        return render(request, "encyclopedia/full_entry.html", {
+            "entry": util.get_entry(search_entry),
+            "entry_name": search_entry
+        })
+    else:
+        return render(request, "encyclopedia/apology.html", {
+            "entry_name": search_entry
+        })
+    
     
 
     
