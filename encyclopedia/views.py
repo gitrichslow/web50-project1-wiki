@@ -21,6 +21,7 @@ def full_entry(request, entry):
         
 def search_entry(request):
     fun = request.GET.get("q")
+    print("fun")
     if util.get_entry(fun):
         return render(request, "encyclopedia/full_entry.html", {
             "entry": util.get_entry(fun),
