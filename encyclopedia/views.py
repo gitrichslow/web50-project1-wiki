@@ -25,6 +25,6 @@ def search_result(request):
     if util.get_entry(request):
         return render()
     
-def test_git(request)
+
     
 
