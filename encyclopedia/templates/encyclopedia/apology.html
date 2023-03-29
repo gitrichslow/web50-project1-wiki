@@ -1,0 +1,10 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    No {{entry_name.capitalize}}
+{% endblock %}
+
+{% block body %}
+    <h1>File not found</h1>
+    <p>{{entry_name.capitalize}} is not a valid entry. Please try again.</p>
+{% endblock %}
