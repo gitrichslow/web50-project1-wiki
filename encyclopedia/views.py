@@ -2,6 +2,10 @@ from django.shortcuts import render
 from django import forms
 from . import util
 
+class NewEntryForm(forms.Form):
+    title = forms.CharField(label='Entry Title', max_length=80)
+#    entry = forms.CharField(label='Full Entry' widget=forms.Textarea)
+
 
 def index(request):
     return render(request, "encyclopedia/index.html", {
@@ -32,6 +36,17 @@ def search_entry(request):
             "entry_name": entry,
             "entries": util.list_entries()
         })
+        
+def new_entry(request):
+    if request.method == 'POST':
+        form = NewEntryForm(request.POST)
+        if form.is_valid():
+            return HttpResponseRedirect('/thanks/')
+        else:
+            form = NewEntryForm()
+            
+        return render(request, 'encyclopedia/new_entry.html', {'form': form})    
+    
 
     
     

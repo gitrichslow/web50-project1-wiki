@@ -1,0 +1,18 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    Search Matches
+{% endblock %}
+
+{% block body %}
+    <h1>Search Matches</h1>
+
+    <ul>
+        {% for entry in entries %}
+            {% if entry_name.lower in entry.lower %}
+            <li><a href="{{ entry }}">{{ entry }}</a></li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+{% endblock %}
