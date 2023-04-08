@@ -1,5 +1,8 @@
 from django.shortcuts import render
 from django import forms
+from django.http import HttpResponseRedirect
+from django.urls import reverse
+
 from . import util
 
 class NewEntryForm(forms.Form):
@@ -24,16 +27,13 @@ def full_entry(request, entry):
         })
         
 def search_entry(request):
-    entry = request.GET.get("q")
+    search = request.GET.get("q")
     #print("entry")
-    if util.get_entry(entry):
-        return render(request, "encyclopedia/full_entry.html", {
-            "entry": util.get_entry(entry),
-            "entry_name": entry
-        })
+    if util.get_entry(search):
+        return HttpResponseRedirect(search)
     else:
         return render(request, "encyclopedia/matches.html", {
-            "entry_name": entry,
+            "search": search,
             "entries": util.list_entries()
         })
         

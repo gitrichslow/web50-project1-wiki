@@ -9,8 +9,10 @@
 
     <ul>
         {% for entry in entries %}
-            {% if entry_name.lower in entry.lower %}
-            <li><a href="{{ entry }}">{{ entry }}</a></li>
+            {% if search.lower in entry.lower %}
+            <li>
+                <a href="{% url 'full_entry' entry %}">{{ entry }}</a>
+            </li>
             {% endif %}
         {% endfor %}
     </ul>
