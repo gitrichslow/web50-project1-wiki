@@ -30,7 +30,7 @@ def search_entry(request):
     search = request.GET.get("q")
     #print("entry")
     if util.get_entry(search):
-        return HttpResponseRedirect(search)
+        return HttpResponseRedirect(reverse('full_entry', args=(search,)))
     else:
         return render(request, "encyclopedia/matches.html", {
             "search": search,
