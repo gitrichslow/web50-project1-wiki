@@ -44,13 +44,17 @@ def new_entry(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             text = form.cleaned_data['text']
-            filename = title.lower().replace(' ', '-') + '.md'
-            if not os.path.isfile(filename):
-                with open(filename, 'w') as f:
+            entry = title.replace(' ', '-')
+            filename = title.replace(' ', '-') + '.md'
+            BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            MARKDOWN_DIR = os.path.join(BASE_DIR, 'entries')
+            filepath = os.path.join(MARKDOWN_DIR, filename)
+            if not os.path.isfile(filepath):
+                with open(filepath, 'w') as f:
                     f.write('# {}\n\n{}'.format(title, text))
-                    return HttpResponseRedirect(reverse('full_entry', args=(filename,)))
+                    return HttpResponseRedirect(reverse('full_entry', args=(entry,)))
             else:
-                return render(request, "encyclopedia/apology.html", {
+                return render(request, "encyclopedia/entry_apology.html", {
                     "filename": filename
             })
 
