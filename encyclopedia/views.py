@@ -3,6 +3,7 @@ from django import forms
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 import os
+import random
 
 from . import util
 
@@ -93,3 +94,8 @@ def edit_entry(request):
                     f.write('{}'.format(text))
                     return HttpResponseRedirect(reverse('full_entry', args=(title,)))
         return HttpResponseRedirect(reverse('index'))
+
+def random_entry(request):
+    entries = util.list_entries()
+    random_num = random.randrange(0, len(entries))
+    return HttpResponseRedirect(reverse('full_entry', args=(entries[random_num],)))
