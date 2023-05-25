@@ -1,11 +1,20 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-    {{ entry_name }}
+{{ entry_name }}
 {% endblock %}
 
 {% block body %}
 
-            {{ entry }}
+{{ entry }}
 
-{% endblock %}
+<br /><br />
+
+<form action="{% url 'edit_entry' %}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="full_entry_form" value="{{ entry }}">
+    <input type="hidden" name="entry_name" value="{{ entry_name }}">
+    <button>edit entry</button>
+</form>
+
+ {% endblock %}

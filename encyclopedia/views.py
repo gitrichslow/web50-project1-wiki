@@ -6,9 +6,13 @@ import os
 
 from . import util
 
+class EditEntryForm(forms.Form):
+                text = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'cols':15}))
+                title = forms.CharField(widget=forms.HiddenInput())
+
 class NewEntryForm(forms.Form):
     title = forms.CharField(label='Entry Title', max_length=80)
-    text = forms.CharField(label='Full Entry', widget=forms.Textarea)
+    text = forms.CharField(label='Full Entry', widget=forms.Textarea(attrs={'rows':4, 'cols':15}))
 
 
 def index(request):
@@ -61,3 +65,31 @@ def new_entry(request):
     if request.method == 'GET':
         form = NewEntryForm()
         return render(request, 'encyclopedia/new_entry.html', {'form': form})
+
+def edit_entry(request):
+    if request.method == 'POST':
+
+        if 'full_entry_form' in request.POST:
+            start_entry = request.POST.get('full_entry_form')
+            title = request.POST.get('entry_name')
+
+
+            form = EditEntryForm(initial={'text': start_entry, 'title': title})
+
+            return render(request, 'encyclopedia/edit_entry.html', {
+                'form': form
+            })
+        if 'text' in request.POST and 'title' in request.POST:
+            form = EditEntryForm(request.POST)
+            if form.is_valid():
+                text = form.cleaned_data['text']
+                title = form.cleaned_data['title']
+                filename = title.replace(' ', '-') + '.md'
+                #entry = title.replace(' ', '-')
+                BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                MARKDOWN_DIR = os.path.join(BASE_DIR, 'entries')
+                filepath = os.path.join(MARKDOWN_DIR, filename)
+                with open(filepath, 'w') as f:
+                    f.write('{}'.format(text))
+                    return HttpResponseRedirect(reverse('full_entry', args=(title,)))
+        return HttpResponseRedirect(reverse('index'))

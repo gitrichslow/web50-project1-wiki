@@ -1,3 +1,3 @@
-# Good entry
+# Good Entry
 
-Is this a good entry? Let's find out!
+Yes! It's a good entry
