@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import os
 import random
+from markdown2 import Markdown
 
 from . import util
 
@@ -23,10 +24,14 @@ def index(request):
 
 def full_entry(request, entry):
     if util.get_entry(entry):
-        return render(request, "encyclopedia/full_entry.html", {
-            "entry": util.get_entry(entry),
-            "entry_name": entry
-        })
+                    markdowner = Markdown()
+                    full_entry = markdowner.convert(util.get_entry(entry))
+                    entry = util.get_entry(entry)
+                    return render(request, "encyclopedia/full_entry.html", {
+                                "entry": entry,
+                                "full_entry": full_entry,
+                                "entry_name": entry
+                    })
     else:
         return render(request, "encyclopedia/apology.html", {
             "entry_name": entry
