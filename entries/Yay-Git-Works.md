@@ -1,3 +1,0 @@
-# Yay Git Works
-
-yaya
