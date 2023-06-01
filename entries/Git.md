@@ -1,3 +1,3 @@
 # Git
 
-Does this work? Yes? But does it really?
+Does this work? But does it really?
