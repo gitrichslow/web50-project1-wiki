@@ -4,16 +4,17 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 import os
 import random
+from markdown2 import Markdown
 
 from . import util
 
 class EditEntryForm(forms.Form):
-                text = forms.CharField(widget=forms.Textarea(attrs={'rows':4, 'cols':15}))
+                start_entry = forms.CharField(widget=forms.Textarea(attrs={'rows':10, 'cols':60}), label='Edit entry')
                 title = forms.CharField(widget=forms.HiddenInput())
 
 class NewEntryForm(forms.Form):
     title = forms.CharField(label='Entry Title', max_length=80)
-    text = forms.CharField(label='Full Entry', widget=forms.Textarea(attrs={'rows':4, 'cols':15}))
+    text = forms.CharField(label='Full Entry', widget=forms.Textarea(attrs={'rows':10, 'cols':60}))
 
 
 def index(request):
@@ -23,13 +24,19 @@ def index(request):
 
 def full_entry(request, entry):
     if util.get_entry(entry):
-        return render(request, "encyclopedia/full_entry.html", {
-            "entry": util.get_entry(entry),
-            "entry_name": entry
-        })
+                    markdowner = Markdown()
+                    entry_name = entry
+                    full_entry = markdowner.convert(util.get_entry(entry))
+                    entry = util.get_entry(entry)
+                    return render(request, "encyclopedia/full_entry.html", {
+                                "entry": entry,
+                                "full_entry": full_entry,
+                                "entry_name": entry_name
+                    })
     else:
-        return render(request, "encyclopedia/apology.html", {
-            "entry_name": entry
+                    entry_name = entry
+                    return render(request, "encyclopedia/apology.html", {
+                "entry": entry
         })
 
 def search_entry(request):
@@ -75,15 +82,17 @@ def edit_entry(request):
             title = request.POST.get('entry_name')
 
 
-            form = EditEntryForm(initial={'text': start_entry, 'title': title})
+            #form = EditEntryForm(initial=request.POST)
+            form = EditEntryForm(initial={'start_entry': start_entry, 'title': title})
 
             return render(request, 'encyclopedia/edit_entry.html', {
-                'form': form
+                            'form': form,
+                            'title': title
             })
-        if 'text' in request.POST and 'title' in request.POST:
+        if 'start_entry' in request.POST and 'title' in request.POST:
             form = EditEntryForm(request.POST)
             if form.is_valid():
-                text = form.cleaned_data['text']
+                text = form.cleaned_data['start_entry']
                 title = form.cleaned_data['title']
                 filename = title.replace(' ', '-') + '.md'
                 #entry = title.replace(' ', '-')
@@ -92,7 +101,7 @@ def edit_entry(request):
                 filepath = os.path.join(MARKDOWN_DIR, filename)
                 with open(filepath, 'w') as f:
                     f.write('{}'.format(text))
-                    return HttpResponseRedirect(reverse('full_entry', args=(title,)))
+                return HttpResponseRedirect(reverse('full_entry', args=(title,)))
         return HttpResponseRedirect(reverse('index'))
 
 def random_entry(request):

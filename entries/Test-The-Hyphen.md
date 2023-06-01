@@ -1,3 +1,0 @@
-# Test The Hyphen
-
-Let's test the hyphen. This is the test...
